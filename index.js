@@ -1,9 +1,14 @@
 function handler(data) {
   let { countries, regions, cities, common, excludePatterns, langs } = data;
-  let stopWords = countries.concat(regions, cities, common);
+  let stopWords = [...countries, ...regions, ...cities, ...common];
   let eventAmount = 0;
 
-  const saveCalendar = () => document.querySelector('.mw-parser-output').parentNode.insertBefore(document.querySelector('.toccolours').cloneNode(true), document.querySelector('.mw-parser-output'));
+  const saveCalendar = () => {
+    let pageContent = document.querySelector('.mw-parser-output');
+    let calendarContainer = pageContent.querySelector('.toccolours');
+    pageContent.parentNode.insertBefore(calendarContainer.cloneNode(true), pageContent);
+    console.log('Calendar is successfully saved.');
+  };
 
   const removeUnnecessary = () => {
     $('.mw-parser-output>*:not(ul)').remove();
