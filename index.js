@@ -1,14 +1,8 @@
-// # TODO: Список два любых слова, CCCР
-// ## Minified versions
-// Links script:
-
 function handler(data) {
   let { countries, regions, cities, common, excludePatterns } = data;
   let stopWords = countries.concat(regions, cities, common);
   let eventAmount = 0;
 
-
-  // ## Detailed code
   const saveCalendar = () => document.querySelector('.mw-parser-output').parentNode.insertBefore(document.querySelector('.toccolours').cloneNode(true), document.querySelector('.mw-parser-output'));
 
   const removeUnnecessary = () => {
@@ -46,9 +40,9 @@ function handler(data) {
     // Start group lifted up nested items
     console.groupCollapsed('List of glued events');
     // We beatify DOM: lift up nested list items.
-    Array.from(document.querySelectorAll('.mw-parser-output li ul,.mw-parser-output li dl')).forEach((it) => {
+    Array.from(document.querySelectorAll('.mw-parser-output li > ul,.mw-parser-output li > dl')).forEach((it) => {
       let parent = it.parentNode;
-      let link = it.previousElementSibling.cloneNode(true);
+      let link = parent.firstChild.cloneNode(true);
       Array.from(it.children).forEach((el) => {
         let elContent = el.innerHTML;
         let parentCopy = parent.cloneNode();
@@ -202,14 +196,9 @@ function handler(data) {
           it[0].parentNode.innerHTML = filteredLinks[0];
         } else {
           addEventItem(filteredLinks.join('|') + '&nbsp;');
-          // console.log(filteredLinks.join('|') + ' ');
         }
       }
     });
-  }
-
-  const removePersons = () => {
-    Array.from(document.querySelectorAll('.mw-parser-output li')).filter((it, index) => index >= eventAmount).forEach((it) => it.remove());
   }
 
   const removeLinks = () => {
@@ -370,7 +359,6 @@ function handler(data) {
     addAnotherDelimiter();
     removeStopWords();
     addRemoveLinksToPersons();
-    // removePersons();
   }
 
   if (document.querySelector('.toccolours:first-child') !== null) {
