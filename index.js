@@ -2,7 +2,7 @@
 // ## Minified versions
 // Links script:
 
-(function (data) {
+function handler(data) {
   let { countries, regions, cities, common, excludePatterns } = data;
   let stopWords = countries.concat(regions, cities, common);
   let eventAmount = 0;
@@ -376,4 +376,4 @@
   if (document.querySelector('.toccolours:first-child') !== null) {
     addDoAllBtn();
   }
-})(data)
+}
