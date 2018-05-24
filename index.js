@@ -1,5 +1,5 @@
 function handler(data) {
-  let { countries, regions, cities, common, excludePatterns } = data;
+  let { countries, regions, cities, common, excludePatterns, langs } = data;
   let stopWords = countries.concat(regions, cities, common);
   let eventAmount = 0;
 
