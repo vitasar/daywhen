@@ -14,6 +14,7 @@ function handler(data) {
   };
 
   // beatify
+  // it should remove images, titles, tables — unuseful stuff.
   const removeUnnecessary = () => {
     $('.mw-parser-output>*:not(ul)').remove();
     $('.mw-parser-output .thumb').remove();
@@ -46,6 +47,8 @@ function handler(data) {
   };
 
   // beatify
+  // it should transform nested lists into neigbouring list elements.
+  // and also for strange reason it removes some other elements, like reference links and empty lists.
   const beatifyDOM = () => {
     // Start group lifted up nested items
     console.groupCollapsed('List of glued events');
@@ -78,6 +81,7 @@ function handler(data) {
   }
 
   // wtf
+  // nobody knows what is it.
   const uniteLists = () => {
     let parent = document.querySelector('.event-person').parentNode;
     let prevParent = parent.previousElementSibling;
@@ -93,6 +97,7 @@ function handler(data) {
   }
 
   // wtf
+  // it should calc amount of events.
   const calcEventAmount = () => {
     Array.from(document.querySelectorAll('.mw-parser-output li')).reduce((max, it, index) => {
       let child = it.firstChild;
@@ -124,6 +129,8 @@ function handler(data) {
   }
 
   // smth with links
+  // actually, it doesn't remove link, it just hide it to data-attr,
+  // and on the second click returns everything back.
   const removeLink = (link) => {
     if (link.hasAttribute('href')) {
       link.style = 'color: rgba(244, 67, 54, 0.75); text-decoration: none';
@@ -136,6 +143,7 @@ function handler(data) {
   }
 
   // smth with links
+  // add red cross to right side of row.
   const addRemoveLink = (li) => {
     var removeLink = document.createElement('span');
     removeLink.classList.add('remove-link');
@@ -287,7 +295,7 @@ function handler(data) {
       document.body.insertBefore(btn, null);
     },
     // add copy link
-    addCopyEventsLink() {
+    addCopyEventsDescriptionBtn() {
       let link = document.createElement('button');
 
       addUi();
@@ -316,7 +324,7 @@ function handler(data) {
       document.body.insertBefore(link, null);
     },
     // add another copy link
-    addCopyPersonsLink() {
+    addCopyEventsLinksBtn() {
       let link = document.createElement('button');
 
       addUi();
@@ -343,10 +351,16 @@ function handler(data) {
       };
 
       document.body.insertBefore(link, null);
+    },
+    addSecondSet() {
+      this.addDoItBtn();
+      this.addCopyEventsDescriptionBtn();
+      this.addCopyEventsLinksBtn();
     }
   }
 
-  // copy
+  // copy element to exchange buffer
+  // copy events and persons uses it.
   function copytoBuffer(it) {
     let range = document.createRange();
     range.selectNode(it);
@@ -377,11 +391,9 @@ function handler(data) {
     removeStopWords(false);
     // Unite several lists in one.
     uniteLists();
-    visualControls.addDoItBtn();
     // Remove person's events from DOM.
     removeLinks();
-    visualControls.addCopyEventsLink();
-    visualControls.addCopyPersonsLink();
+    visualControls.addSecondSet();
   }
 
   // smth with links
