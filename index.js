@@ -2,14 +2,18 @@ function handler(data) {
   let { countries, regions, cities, common, excludePatterns, langs } = data;
   let stopWords = [...countries, ...regions, ...cities, ...common];
   let eventAmount = 0;
+  const pageContent = document.querySelector('.mw-parser-output');
 
-  const saveCalendar = () => {
-    let pageContent = document.querySelector('.mw-parser-output');
-    let calendarContainer = pageContent.querySelector('.toccolours');
+  // beatify
+  function saveCalendar() {
+    const calendarContainer = pageContent.querySelector('.toccolours');
+
     pageContent.parentNode.insertBefore(calendarContainer.cloneNode(true), pageContent);
+
     console.log('Calendar is successfully saved.');
   };
 
+  // beatify
   const removeUnnecessary = () => {
     $('.mw-parser-output>*:not(ul)').remove();
     $('.mw-parser-output .thumb').remove();
@@ -41,6 +45,7 @@ function handler(data) {
     console.groupEnd();
   };
 
+  // beatify
   const beatifyDOM = () => {
     // Start group lifted up nested items
     console.groupCollapsed('List of glued events');
@@ -72,6 +77,7 @@ function handler(data) {
     console.groupEnd();
   }
 
+  // wtf
   const uniteLists = () => {
     let parent = document.querySelector('.event-person').parentNode;
     let prevParent = parent.previousElementSibling;
@@ -86,6 +92,7 @@ function handler(data) {
     }
   }
 
+  // wtf
   const calcEventAmount = () => {
     Array.from(document.querySelectorAll('.mw-parser-output li')).reduce((max, it, index) => {
       let child = it.firstChild;
@@ -116,6 +123,7 @@ function handler(data) {
     }, 0);
   }
 
+  // smth with links
   const removeLink = (link) => {
     if (link.hasAttribute('href')) {
       link.style = 'color: rgba(244, 67, 54, 0.75); text-decoration: none';
@@ -127,6 +135,7 @@ function handler(data) {
     }
   }
 
+  // smth with links
   const addRemoveLink = (li) => {
     var removeLink = document.createElement('span');
     removeLink.classList.add('remove-link');
@@ -136,6 +145,7 @@ function handler(data) {
     li.appendChild(removeLink);
   }
 
+  // wtf
   const addEventItem = (it) => {
     let delimiter = document.querySelectorAll('.event-person')[1];
     let newLi = document.createElement('li');
@@ -143,6 +153,7 @@ function handler(data) {
     delimiter.parentNode.insertBefore(newLi, delimiter);
   }
 
+  // filter smth
   const removeStopWords = (isNotPrint = true) => {
     // Vars for deleting common words: country names, jobs — everything doesn't interesting.
     // let stopWords = ['Япония'];
@@ -206,6 +217,7 @@ function handler(data) {
     });
   }
 
+  // smth with links
   const removeLinks = () => {
     Array.from(document.querySelectorAll('a')).forEach((it) => {
       it.addEventListener('click', (e) => {
@@ -215,6 +227,7 @@ function handler(data) {
     })
   }
 
+  // show second btn
   const addDoItBtn = () => {
     let btn = document.createElement('button');
     btn.innerHTML = 'Do it!';
@@ -238,29 +251,37 @@ function handler(data) {
     document.body.insertBefore(btn, null);
   }
 
-  const addDoAllBtn = () => {
-    let btn = document.createElement('button');
-    btn.innerHTML = 'All you need';
-    btn.classList.add('do-all-btn');
-    const handler = () => {
+  // show first btn
+  function addDoAllBtn() {
+    let btn = document.createElement('a');
+
+    addUiToBtn();
+    function addUiToBtn() {
+      btn.innerHTML = 'All you need';
+      btn.classList.add('do-all-btn');
+      const css = `.do-all-btn{position:fixed;right:30px;top:30px;z-index:1000;width:150px;padding:3px 24px 2px;font-size:16px/2.18;color:#191919;background:#fab964;box-shadow:4px 4px 10px 1px #eee;border-radius:20px;transition:.5s}.do-all-btn:hover{box-shadow:0 0 10px 1px #eee}`;
+
+      let style = document.createElement('style');
+      if (style.styleSheet) {
+        style.styleSheet.cssText = css;
+      } else {
+        style.appendChild(document.createTextNode(css));
+      }
+
+      document.getElementsByTagName('head')[0].appendChild(style);
+    };
+
+    btn.addEventListener('click', handler);
+    function handler() {
       btn.removeEventListener('click', handler);
       btn.remove();
       doAll();
     };
-    btn.addEventListener('click', handler);
-    let css = `.do-all-btn{position:fixed;right:30px;top:30px;z-index:1000;width:150px;padding:3px 24px 2px;font-size:16px;line-height:35px;color:#191919;background-color:#fab964;border:none;box-shadow:4px 4px 10px 1px #eee;border-radius:20px;transition:.5s;cursor:pointer}.do-all-btn:hover{box-shadow:0 0 10px 1px #eee}`;
-
-    let style = document.createElement('style');
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    }
-    document.getElementsByTagName('head')[0].appendChild(style);
 
     document.body.insertBefore(btn, null);
   }
 
+  // copy
   const copytoBuffer = (it) => {
     let range = document.createRange();
     range.selectNode(it);
@@ -276,6 +297,7 @@ function handler(data) {
     window.getSelection().removeAllRanges();
   }
 
+  // add copy link
   const addCopyEventsLink = () => {
     let link = document.createElement('button');
     link.innerHTML = 'Copy events list';
@@ -298,6 +320,7 @@ function handler(data) {
     document.body.insertBefore(link, null);
   }
 
+  // add another copy link
   const addCopyPersonsLink = () => {
     let link = document.createElement('button');
     link.innerHTML = 'Copy persons list';
@@ -320,6 +343,7 @@ function handler(data) {
     document.body.insertBefore(link, null);
   }
 
+  // handler for first btn
   const doAll = () => {
     // Save calendar before work.
     saveCalendar();
@@ -344,6 +368,7 @@ function handler(data) {
     addCopyPersonsLink();
   }
 
+  // smth with links
   const addRemoveLinksToPersons = () => {
     let flag = false;
     Array.from(document.querySelectorAll('.mw-parser-output li')).filter((it, index) => {
@@ -354,19 +379,23 @@ function handler(data) {
     }).forEach((it) => addRemoveLink(it));
   }
 
+  // add some delimiter
   const addAnotherDelimiter = () => {
     let delimiter = document.querySelector('.event-person');
     let copyDelimiter = delimiter.cloneNode();
     delimiter.parentNode.insertBefore(copyDelimiter, delimiter);
   }
 
+  // handler for second btn
   const doIt = () => {
     addAnotherDelimiter();
     removeStopWords();
     addRemoveLinksToPersons();
   }
 
-  if (document.querySelector('.toccolours:first-child') !== null) {
+  // show or not do all btn.
+  // show in any case just now.
+  if (document.querySelector('.toccolours:first-child') !== null || true) {
     addDoAllBtn();
   }
 }
