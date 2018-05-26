@@ -236,7 +236,7 @@ function handler(data) {
       function addUi() {
         btn.innerHTML = 'All you need';
         btn.classList.add('do-all-btn');
-        const css = `.do-all-btn{position:fixed;right:30px;top:30px;z-index:1000;width:150px;padding:3px 24px 2px;font-size:16px;line-height:15pxe-height:35px;color:#191919;background:#fab964;box-shadow:4px 4px 10px 1px #eee;border-radius:20px;transition:.5s}.do-all-btn:hover{box-shadow:0 0 10px 1px #eee}`;
+        const css = `.do-all-btn{position:fixed;right:30px;top:30px;z-index:1000;width:150px;padding:3px 24px 2px;font-size:16px;line-height:35px;color:#191919;background:#fab964;box-shadow:4px 4px 10px 1px #eee;border:none;border-radius:20px;transition:.5s;cursor:pointer}.do-all-btn:hover{box-shadow:0 0 10px 1px #eee}`;
 
         let style = document.createElement('style');
         if (style.styleSheet) {
