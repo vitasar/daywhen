@@ -227,62 +227,127 @@ function handler(data) {
     })
   }
 
-  // show second btn
-  const addDoItBtn = () => {
-    let btn = document.createElement('button');
-    btn.innerHTML = 'Do it!';
-    btn.classList.add('do-all-btn', 'do-it-btn');
-    let handler = () => {
-      btn.removeEventListener('click', handler);
-      btn.remove();
-      doIt();
-    }
-    btn.addEventListener('click', handler);
-    let css = `.do-it-btn{color:#fff;background-color:#fa7369}`;
+  let visualControls = {
+    // show first btn
+    addDoAllBtn() {
+      let btn = document.createElement('a');
 
-    let style = document.createElement('style');
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    }
-    document.getElementsByTagName('head')[0].appendChild(style);
+      addUi();
+      function addUi() {
+        btn.innerHTML = 'All you need';
+        btn.classList.add('do-all-btn');
+        const css = `.do-all-btn{position:fixed;right:30px;top:30px;z-index:1000;width:150px;padding:3px 24px 2px;font-size:16px/2.18;color:#191919;background:#fab964;box-shadow:4px 4px 10px 1px #eee;border-radius:20px;transition:.5s}.do-all-btn:hover{box-shadow:0 0 10px 1px #eee}`;
 
-    document.body.insertBefore(btn, null);
-  }
+        let style = document.createElement('style');
+        if (style.styleSheet) {
+          style.styleSheet.cssText = css;
+        } else {
+          style.appendChild(document.createTextNode(css));
+        }
 
-  // show first btn
-  function addDoAllBtn() {
-    let btn = document.createElement('a');
+        document.getElementsByTagName('head')[0].appendChild(style);
+      };
 
-    addUiToBtn();
-    function addUiToBtn() {
-      btn.innerHTML = 'All you need';
-      btn.classList.add('do-all-btn');
-      const css = `.do-all-btn{position:fixed;right:30px;top:30px;z-index:1000;width:150px;padding:3px 24px 2px;font-size:16px/2.18;color:#191919;background:#fab964;box-shadow:4px 4px 10px 1px #eee;border-radius:20px;transition:.5s}.do-all-btn:hover{box-shadow:0 0 10px 1px #eee}`;
+      btn.addEventListener('click', handler);
+      function handler() {
+        btn.removeEventListener('click', handler);
+        btn.remove();
+        doAll();
+      };
 
-      let style = document.createElement('style');
-      if (style.styleSheet) {
-        style.styleSheet.cssText = css;
-      } else {
-        style.appendChild(document.createTextNode(css));
+      document.body.insertBefore(btn, null);
+    },
+    // show second btn
+    addDoItBtn() {
+      let btn = document.createElement('a');
+
+      addUi();
+      function addUi() {
+        btn.innerHTML = 'Do it!';
+        btn.classList.add('do-all-btn', 'do-it-btn');
+        const css = `.do-it-btn{color:#fff;background:#fa7369}`;
+
+        let style = document.createElement('style');
+        if (style.styleSheet) {
+          style.styleSheet.cssText = css;
+        } else {
+          style.appendChild(document.createTextNode(css));
+        }
+
+        document.getElementsByTagName('head')[0].appendChild(style);
       }
 
-      document.getElementsByTagName('head')[0].appendChild(style);
-    };
+      btn.addEventListener('click', handler);
+      function handler() {
+        btn.removeEventListener('click', handler);
+        btn.remove();
+        doIt();
+      }
 
-    btn.addEventListener('click', handler);
-    function handler() {
-      btn.removeEventListener('click', handler);
-      btn.remove();
-      doAll();
-    };
+      document.body.insertBefore(btn, null);
+    },
+    // add copy link
+    addCopyEventsLink() {
+      let link = document.createElement('a');
 
-    document.body.insertBefore(btn, null);
+      addUi();
+      function addUi() {
+        link.innerHTML = 'Copy events list';
+        link.classList.add('copy-events-link');
+
+        const css = `.copy-events-link{position:fixed;right:30px;top:80px;z-index:1000;padding:0;font-size:12px/1.6;color:#426cd4;border:none;border-bottom:1px solid rgba(66, 108, 212, 0.85);background:none;transition:.5s;cursor:pointer}.copy-events-link:hover{border-color:rgba(66, 108, 212, 0.35)}`;
+
+        let style = document.createElement('style');
+        if (style.styleSheet) {
+          style.styleSheet.cssText = css;
+        } else {
+          style.appendChild(document.createTextNode(css));
+        }
+
+        document.getElementsByTagName('head')[0].appendChild(style);
+      }
+
+      link.addEventListener('click', handler);
+      function handler() {
+        let eventsDescriptionList = document.querySelector('.event-person').parentNode.previousElementSibling;
+        copytoBuffer(eventsDescriptionList);
+      };
+
+      document.body.insertBefore(link, null);
+    },
+    // add another copy link
+    addCopyPersonsLink() {
+      let link = document.createElement('a');
+
+      addUi();
+      function addUi() {
+        link.innerHTML = 'Copy persons list';
+        link.classList.add('copy-events-link', 'copy-persons-link');
+
+        const css = `.copy-persons-link{right:30px;top:100px}`;
+
+        let style = document.createElement('style');
+        if (style.styleSheet) {
+          style.styleSheet.cssText = css;
+        } else {
+          style.appendChild(document.createTextNode(css));
+        }
+
+        document.getElementsByTagName('head')[0].appendChild(style);
+      }
+
+      link.addEventListener('click', handler);
+      function handler() {
+        let eventsLinkList = document.querySelector('.event-person').parentNode;
+        copytoBuffer(eventsLinkList);
+      };
+
+      document.body.insertBefore(link, null);
+    }
   }
 
   // copy
-  const copytoBuffer = (it) => {
+  function copytoBuffer(it) {
     let range = document.createRange();
     range.selectNode(it);
     window.getSelection().addRange(range);
@@ -295,52 +360,6 @@ function handler(data) {
     }
 
     window.getSelection().removeAllRanges();
-  }
-
-  // add copy link
-  const addCopyEventsLink = () => {
-    let link = document.createElement('button');
-    link.innerHTML = 'Copy events list';
-    link.classList.add('copy-events-link');
-    const handler = () => {
-      let eventsList = document.querySelector('.event-person').parentNode.previousElementSibling;
-      copytoBuffer(eventsList);
-    };
-    link.addEventListener('click', handler);
-    let css = `.copy-events-link{position:fixed;right:30px;top:80px;z-index:1000;padding:0;font-size:12px;line-height:14px;color:#426cd4;border:none;border-bottom:1px solid rgba(66, 108, 212, 0.85);background:none;transition:.5s;cursor:pointer}.copy-events-link:hover{border-color:rgba(66, 108, 212, 0.35)}`;
-
-    let style = document.createElement('style');
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    }
-    document.getElementsByTagName('head')[0].appendChild(style);
-
-    document.body.insertBefore(link, null);
-  }
-
-  // add another copy link
-  const addCopyPersonsLink = () => {
-    let link = document.createElement('button');
-    link.innerHTML = 'Copy persons list';
-    link.classList.add('copy-events-link', 'copy-persons-link');
-    const handler = () => {
-      let personsList = document.querySelector('.event-person').parentNode;
-      copytoBuffer(personsList);
-    };
-    link.addEventListener('click', handler);
-    let css = `.copy-persons-link{right:30px;top:100px}`;
-
-    let style = document.createElement('style');
-    if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
-    }
-    document.getElementsByTagName('head')[0].appendChild(style);
-
-    document.body.insertBefore(link, null);
   }
 
   // handler for first btn
@@ -358,14 +377,11 @@ function handler(data) {
     removeStopWords(false);
     // Unite several lists in one.
     uniteLists();
-    // Add do it button.
-    addDoItBtn();
+    visualControls.addDoItBtn();
     // Remove person's events from DOM.
     removeLinks();
-    // Add copy link.
-    addCopyEventsLink();
-    // Add another copy link.
-    addCopyPersonsLink();
+    visualControls.addCopyEventsLink();
+    visualControls.addCopyPersonsLink();
   }
 
   // smth with links
@@ -396,6 +412,6 @@ function handler(data) {
   // show or not do all btn.
   // show in any case just now.
   if (document.querySelector('.toccolours:first-child') !== null || true) {
-    addDoAllBtn();
+    visualControls.addDoAllBtn();
   }
 }
