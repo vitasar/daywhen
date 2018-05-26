@@ -230,13 +230,13 @@ function handler(data) {
   let visualControls = {
     // show first btn
     addDoAllBtn() {
-      let btn = document.createElement('a');
+      let btn = document.createElement('button');
 
       addUi();
       function addUi() {
         btn.innerHTML = 'All you need';
         btn.classList.add('do-all-btn');
-        const css = `.do-all-btn{position:fixed;right:30px;top:30px;z-index:1000;width:150px;padding:3px 24px 2px;font-size:16px/2.18;color:#191919;background:#fab964;box-shadow:4px 4px 10px 1px #eee;border-radius:20px;transition:.5s}.do-all-btn:hover{box-shadow:0 0 10px 1px #eee}`;
+        const css = `.do-all-btn{position:fixed;right:30px;top:30px;z-index:1000;width:150px;padding:3px 24px 2px;font-size:16px;line-height:15pxe-height:35px;color:#191919;background:#fab964;box-shadow:4px 4px 10px 1px #eee;border-radius:20px;transition:.5s}.do-all-btn:hover{box-shadow:0 0 10px 1px #eee}`;
 
         let style = document.createElement('style');
         if (style.styleSheet) {
@@ -259,7 +259,7 @@ function handler(data) {
     },
     // show second btn
     addDoItBtn() {
-      let btn = document.createElement('a');
+      let btn = document.createElement('button');
 
       addUi();
       function addUi() {
@@ -288,14 +288,14 @@ function handler(data) {
     },
     // add copy link
     addCopyEventsLink() {
-      let link = document.createElement('a');
+      let link = document.createElement('button');
 
       addUi();
       function addUi() {
         link.innerHTML = 'Copy events list';
         link.classList.add('copy-events-link');
 
-        const css = `.copy-events-link{position:fixed;right:30px;top:80px;z-index:1000;padding:0;font-size:12px/1.6;color:#426cd4;border:none;border-bottom:1px solid rgba(66, 108, 212, 0.85);background:none;transition:.5s;cursor:pointer}.copy-events-link:hover{border-color:rgba(66, 108, 212, 0.35)}`;
+        const css = `.copy-events-link{position:fixed;right:30px;top:80px;z-index:1000;padding:0;font-size:12px;line-height:15px;color:#426cd4;border:none;border-bottom:1px solid rgba(66, 108, 212, 0.85);background:none;transition:.5s;cursor:pointer}.copy-events-link:hover{border-color:rgba(66, 108, 212, 0.35)}`;
 
         let style = document.createElement('style');
         if (style.styleSheet) {
@@ -317,7 +317,7 @@ function handler(data) {
     },
     // add another copy link
     addCopyPersonsLink() {
-      let link = document.createElement('a');
+      let link = document.createElement('button');
 
       addUi();
       function addUi() {
