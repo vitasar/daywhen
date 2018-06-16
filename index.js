@@ -104,11 +104,9 @@ function handler(data) {
 
   // wtf
   // it should calc amount of events.
-  function calcEventAmount() {
-    Array.from(pageContent.querySelectorAll('li')).
-      map((it) => {
-        return parseInt(it.textContent);
-      })
+  function addDelimiterBeforePerson() {
+    Array.from(pageContent.querySelectorAll('li'))
+      .map((it) => parseInt(it.textContent))
       .reduce((max, it, index) => {
         if (max > it && eventAmount === 0) {
           eventAmount = index;
@@ -119,6 +117,8 @@ function handler(data) {
 
         return Math.max(max, it);
       }, 0);
+
+    pageContent.querySelectorAll('li')[eventAmount].before(techMoves.createDelimiter());
   }
 
   // smth with links
@@ -161,14 +161,6 @@ function handler(data) {
     // let langs = ['en', 'pl', 'nl'];
     Array.from(pageContent.querySelectorAll('li')).map((it) => it.querySelectorAll('a')).forEach((it, index) => {
       let links = Array.from(it).filter((el) => el.href !== '');
-
-      // Add visual delimiter in developer's console.
-      if (index === eventAmount) {
-        if (!isNotPrint) {
-
-          it[0].parentNode.before(techMoves.createDelimiter(), it[0]);
-        };
-      };
 
       // It occurs, that for person name keeps always at the first link after year. So, we removed others.
       if (index >= eventAmount) {
@@ -376,7 +368,7 @@ function handler(data) {
     removeUnnecessary();
     beatifyDOM();
     // We calculate index delimiter: when events end and persons start.
-    calcEventAmount();
+    addDelimiterBeforePerson();
     // Filter links through our filters
     removeStopWords(false);
     // Unite several lists in one.
