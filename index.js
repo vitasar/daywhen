@@ -20,6 +20,12 @@ function handler(data) {
           set[i].remove();
         }
       }
+    },
+    createDelimiter() {
+      const delimiter = document.createElement('li');
+      delimiter.style = 'border-top: 3px solid red';
+      delimiter.classList.add('event-person');
+      return delimiter;
     }
   };
 
@@ -98,7 +104,7 @@ function handler(data) {
 
   // wtf
   // it should calc amount of events.
-  const calcEventAmount = () => {
+  function calcEventAmount() {
     Array.from(pageContent.querySelectorAll('li')).
       map((it) => {
         return parseInt(it.textContent);
@@ -159,15 +165,12 @@ function handler(data) {
       // Add visual delimiter in developer's console.
       if (index === eventAmount) {
         if (!isNotPrint) {
-          let newItem = document.createElement('li');
-          newItem.style = 'border-top: 3px solid red';
-          newItem.classList.add('event-person');
-          it[0].parentNode.parentNode.insertBefore(newItem, it[0].parentNode);
+
+          it[0].parentNode.before(techMoves.createDelimiter(), it[0]);
         };
-        console.warn('Below you`ve seen list of persons');
       };
 
-      // It occurs, that for person name keeps alwayws at the first link after year. So, we removed others.
+      // It occurs, that for person name keeps always at the first link after year. So, we removed others.
       if (index >= eventAmount) {
         links = links.filter((it, elIndex) => elIndex < 2);
       };
