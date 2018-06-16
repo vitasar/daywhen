@@ -13,12 +13,26 @@ function handler(data) {
     console.log('Calendar is successfully saved.');
   };
 
+  function removeCollection(set) {
+    if (set.length) {
+      for (let i = 0; i < set.length; i++) {
+        set[i].remove();
+      }
+    }
+  }
+
   // beatify
   // it should remove images, titles, tables — unuseful stuff.
   const removeUnnecessary = () => {
-    $('.mw-parser-output>*:not(ul)').remove();
-    pageContent.querySelectorAll('.thumb').remove();
-    pageContent.querySelectorAll('.mw-empty-elt').remove();
+    let unwantedElements = {
+      children: pageContent.children.filter((it) => it.tagName !== 'UL'),
+      images: pageContent.querySelectorAll('.thumb'),
+      commentaries: pageContent.querySelectorAll('.mw-empty-elt')
+    };
+    for (key in unwantedElements) {
+      removeCollection(unwantedElements[key]);
+    };
+
     // Start group removed unnecessary events
     console.groupCollapsed('Below you`ve seen a list of removed items');
 
