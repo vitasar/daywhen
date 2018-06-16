@@ -66,7 +66,7 @@ function handler(data) {
 
       Array.from(list.children).forEach((nestedItem) => {
         const liftedUpItem = itemWithList.cloneNode();
-        liftedUpItem.append(itemTitle.cloneNode(true), ' — ', nestedItem.innerHTML);
+        liftedUpItem.append(itemTitle.cloneNode(true), ` — ${nestedItem.innerHTML}`);
 
         itemWithList.before(liftedUpItem);
 
