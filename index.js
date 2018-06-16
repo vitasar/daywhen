@@ -41,7 +41,7 @@ function handler(data) {
     const events = pageContent.querySelectorAll('li');
     // We removed everything, that doesn't starts with a year.
     Array.from(events).forEach((it) => {
-      const isNotNestedElement = () => !it.closest('li');
+      const isNotNestedElement = () => !it.closest('li li');
       const isNotNumberFirst = () => isNaN(parseInt(it.textContent));
       if (isNotNestedElement && isNotNumberFirst) {
         console.log(it.textContent);
