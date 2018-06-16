@@ -95,12 +95,12 @@ function handler(data) {
     const lastEventList = firstPersonList.previousElementSibling;
 
     while (lastEventList.previousElementSibling !== null) {
-      lastEventList.prepend([...lastEventList.previousElementSibling.children]);
+      lastEventList.insertAdjacentHTML('beforeBegin', lastEventList.previousElementSibling.innerHTML);
       lastEventList.previousElementSibling.remove();
     }
 
     while (firstPersonList.nextElementSibling !== null) {
-      firstPersonList.append([...firstPersonList.nextElementSibling.children]);
+      lastEventList.insertAdjacentHTML('afterEnd', firstPersonList.nextElementSibling.innerHTML);
       firstPersonList.nextElementSibling.remove();
     }
   }
