@@ -25,7 +25,7 @@ function handler(data) {
   // it should remove images, titles, tables — unuseful stuff.
   const removeUnnecessary = () => {
     let unwantedElements = {
-      children: pageContent.children.filter((it) => it.tagName !== 'UL'),
+      children: Array.from(pageContent.children).filter((it) => it.tagName !== 'UL'),
       images: pageContent.querySelectorAll('.thumb'),
       commentaries: pageContent.querySelectorAll('.mw-empty-elt')
     };
