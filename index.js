@@ -99,33 +99,20 @@ function handler(data) {
   // wtf
   // it should calc amount of events.
   const calcEventAmount = () => {
-    Array.from(pageContent.querySelectorAll('li')).reduce((max, it, index) => {
-      let child = it.firstChild;
-      if (typeof child.innerHTML !== 'undefined') {
-        child = child.firstChild;
-      };
-
-      if (child.data === ' ') {
-        child = child.nextSibling;
-        if (typeof child.innerHTML !== 'undefined') {
-          child = child.firstChild;
+    Array.from(pageContent.querySelectorAll('li')).
+      map((it) => {
+        return parseInt(it.textContent);
+      })
+      .reduce((max, it, index) => {
+        if (max > it && eventAmount === 0) {
+          eventAmount = index;
         };
-      };
+        if (isNaN(it)) {
+          return max;
+        };
 
-      if (max > parseInt(child.data) && (eventAmount === 0)) {
-        eventAmount = index;
-      };
-
-      if (isNaN(parseInt(child.data))) {
-        return max;
-      };
-
-      if (child.data.includes('до н. э.')) {
-        return max;
-      }
-
-      return Math.max(max, parseInt(child.data));
-    }, 0);
+        return Math.max(max, it);
+      }, 0);
   }
 
   // smth with links
