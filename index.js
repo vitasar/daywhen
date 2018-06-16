@@ -8,7 +8,7 @@ function handler(data) {
   function saveCalendar() {
     const calendarContainer = pageContent.querySelector('.toccolours');
 
-    pageContent.prepend(calendarContainer.cloneNode(true));
+    pageContent.parentNode.before(calendarContainer);
 
     console.log('Calendar is successfully saved.');
   };
@@ -24,7 +24,7 @@ function handler(data) {
   };
 
   // beatify
-  // it should remove images, titles, tables — unuseful stuff.
+  // remove images, titles, tables — unuseful stuff.
   function removeUnnecessary() {
     const unwantedElements = {
       notListChildren: Array.from(pageContent.children).filter((it) => !it.matches('ul')),
@@ -53,19 +53,20 @@ function handler(data) {
   };
 
   // beatify
-  // it should transform nested lists into neigbouring list elements.
+  // transform nested lists into neigbouring list elements.
   function beatifyDOM() {
     const nestedLists = Array.from(pageContent.querySelectorAll('li > ul,li > dl'));
-    // Start group lifted up nested items
+
     console.groupCollapsed('List of glued events');
+
     // We beatify DOM: lift up nested list items.
     nestedLists.forEach((list) => {
       const itemWithList = list.parentNode;
-      const commonTitle = itemWithList.firstChild.cloneNode(true);
+      const itemTitle = itemWithList.firstChild;
 
       Array.from(list.children).forEach((nestedItem) => {
         const liftedUpItem = itemWithList.cloneNode();
-        liftedUpItem.append(commonTitle, ' — ', nestedItem);
+        liftedUpItem.append(itemTitle.cloneNode(true), ' — ', nestedItem);
 
         itemWithList.before(liftedUpItem);
 
