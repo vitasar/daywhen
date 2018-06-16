@@ -8,7 +8,7 @@ function handler(data) {
   function saveCalendar() {
     const calendarContainer = pageContent.querySelector('.toccolours');
 
-    pageContent.parentNode.insertBefore(calendarContainer.cloneNode(true), pageContent);
+    pageContent.prepend(calendarContainer);
 
     console.log('Calendar is successfully saved.');
   };
@@ -62,12 +62,13 @@ function handler(data) {
     nestedLists.forEach((list) => {
       const itemWithList = list.parentNode;
       const commonTitle = itemWithList.firstChild;
-      const itemWithListClone = itemWithList.cloneNode();
 
       Array.from(list.children).forEach((nestedItem) => {
-        itemWithListClone.innerHTML = `${commonTitle.innerHTML} — ${nestedItem.innerHTML}`;
+        const liftedUpItem = itemWithList.cloneNode();
+        liftedUpItem.append(commonTitle, ' — ', nestedItem);
 
-        itemWithList.parentNode.insertBefore(itemWithListClone, itemWithList);
+        itemWithList.before(liftedUpItem);
+
         console.log(nestedItem.textContent);
       })
     })
