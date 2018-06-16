@@ -8,7 +8,7 @@ function handler(data) {
   function saveCalendar() {
     const calendarContainer = pageContent.querySelector('.toccolours');
 
-    pageContent.prepend(calendarContainer);
+    pageContent.prepend(calendarContainer.cloneNode(true));
 
     console.log('Calendar is successfully saved.');
   };
@@ -61,7 +61,7 @@ function handler(data) {
     // We beatify DOM: lift up nested list items.
     nestedLists.forEach((list) => {
       const itemWithList = list.parentNode;
-      const commonTitle = itemWithList.firstChild;
+      const commonTitle = itemWithList.firstChild.cloneNode(true);
 
       Array.from(list.children).forEach((nestedItem) => {
         const liftedUpItem = itemWithList.cloneNode();
