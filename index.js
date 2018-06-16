@@ -21,10 +21,11 @@ function handler(data) {
         }
       }
     },
+    CLASS_DELIMITER: 'event-person',
     createDelimiter() {
       const delimiter = document.createElement('li');
       delimiter.style = 'border-top: 3px solid red';
-      delimiter.classList.add('event-person');
+      delimiter.classList.add(this.CLASS_DELIMITER);
       return delimiter;
     }
   };
@@ -86,19 +87,21 @@ function handler(data) {
     console.groupEnd();
   }
 
-  // wtf
-  // nobody knows what is it.
-  const uniteLists = () => {
-    let parent = document.querySelector('.event-person').parentNode;
-    let prevParent = parent.previousElementSibling;
-    while (prevParent.previousElementSibling !== null) {
-      prevParent.innerHTML = prevParent.previousElementSibling.innerHTML + prevParent.innerHTML;
-      prevParent.previousElementSibling.remove();
+  // beatify
+  // unites multiply lists into just two: events & persons.
+  // it is necessary because of script selection later.
+  function uniteLists() {
+    const firstPersonList = pageContent.querySelector(`.${techMoves.CLASS_DELIMITER}`).parentNode;
+    const lastEventList = firstPersonList.previousElementSibling;
+
+    while (lastEventList.previousElementSibling !== null) {
+      lastEventList.prepend(lastEventList.previousElementSibling.children);
+      lastEventList.previousElementSibling.remove();
     }
 
-    while (parent.nextElementSibling !== null) {
-      parent.innerHTML = parent.innerHTML + parent.nextElementSibling.innerHTML;
-      parent.nextElementSibling.remove();
+    while (firstPersonList.nextElementSibling !== null) {
+      firstPersonList.append(firstPersonList.nextElementSibling.children);
+      firstPersonList.nextElementSibling.remove();
     }
   }
 
