@@ -17,29 +17,16 @@ function handler(data) {
   // it should remove images, titles, tables — unuseful stuff.
   const removeUnnecessary = () => {
     $('.mw-parser-output>*:not(ul)').remove();
-    $('.mw-parser-output .thumb').remove();
-    $('.mw-empty-elt').remove();
+    pageContent.querySelectorAll('.thumb').remove();
+    pageContent.querySelectorAll('.mw-empty-elt').remove();
     // Start group removed unnecessary events
     console.groupCollapsed('Below you`ve seen a list of removed items');
+
+    const events = pageContent.querySelectorAll('li');
     // We removed everything, that doesn't starts with a year.
-    Array.from(document.querySelectorAll('.mw-parser-output li')).forEach((it, index) => {
-      let child = it.firstChild;
-      if (child !== null && typeof child.innerHTML !== 'undefined') {
-        child = child.firstChild;
-      };
-
-      if (child.data === ' ') {
-        child = child.nextSibling;
-        if (typeof child.innerHTML !== 'undefined') {
-          child = child.firstChild;
-        };
-      };
-
-      let itemStartsWithText = isNaN(parseInt(child.data));
-      let itemNotInNestedList = it.parentNode.parentNode.classList.contains('mw-parser-output');
-      if (itemStartsWithText && itemNotInNestedList) {
-        // show removed items
-        console.log(it.innerText);
+    Array.from(events).forEach((it) => {
+      if (isNaN( parseInt(it.textContent) )) {
+        console.log(it.textContent);
         it.remove();
       }
     });
@@ -421,8 +408,8 @@ function handler(data) {
     addRemoveLinksToPersons();
   }
 
-  // show or not do all btn.
   // show in any case just now.
+  // show or not 'do all btn'.
   if (document.querySelector('.toccolours:first-child') !== null || true) {
     visualControls.addDoAllBtn();
   }
