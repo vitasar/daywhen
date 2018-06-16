@@ -25,11 +25,12 @@ function handler(data) {
 
   // beatify
   // it should remove images, titles, tables — unuseful stuff.
-  const removeUnnecessary = () => {
-    let unwantedElements = {
+  function removeUnnecessary() {
+    const unwantedElements = {
       notListChildren: Array.from(pageContent.children).filter((it) => !it.matches('ul')),
       images: pageContent.querySelectorAll('.thumb'),
-      commentaries: pageContent.querySelectorAll('.mw-empty-elt')
+      commentaries: pageContent.querySelectorAll('.mw-empty-elt'),
+      references: pageContent.querySelectorAll('.reference')
     };
     for (name in unwantedElements) {
       techMoves.removeCollection(unwantedElements[name]);
@@ -53,34 +54,26 @@ function handler(data) {
 
   // beatify
   // it should transform nested lists into neigbouring list elements.
-  // and also for strange reason it removes some other elements, like reference links and empty lists.
-  const beatifyDOM = () => {
+  function beatifyDOM() {
+    const nestedLists = Array.from(pageContent.querySelectorAll('li > ul,li > dl'));
     // Start group lifted up nested items
     console.groupCollapsed('List of glued events');
     // We beatify DOM: lift up nested list items.
-    Array.from(document.querySelectorAll('.mw-parser-output li > ul,.mw-parser-output li > dl')).forEach((it) => {
-      let parent = it.parentNode;
-      let link = parent.firstChild.cloneNode(true);
-      Array.from(it.children).forEach((el) => {
-        let elContent = el.innerHTML;
-        let parentCopy = parent.cloneNode();
-        // We check: should we or not add hyphens
-        let isNotHyphen = (typeof el.firstChild.data === 'undefined') || !~el.firstChild.data.indexOf('—');
-        let hyphenString = ' — ';
-        parent.parentNode.insertBefore(parentCopy, parent);
+    nestedLists.forEach((list) => {
+      const itemWithList = list.parentNode;
+      const commonTitle = itemWithList.firstChild.cloneNode(true);
+      const itemWithListClone = itemWithList.cloneNode();
+      itemWithListClone.insertBefore(commonTitle, null);
 
-        parentCopy.insertBefore(link, null);
-        if (isNotHyphen) {
-          parentCopy.innerHTML += hyphenString;
-        }
-        parentCopy.innerHTML += elContent;
-        console.log(parentCopy.innerText);
+      Array.from(list.children).forEach((nestedItem) => {
+        itemWithListClone.innerHTML = ` — ${nestedItem.innerHTML}`;
+
+        itemWithList.parentNode.insertBefore(itemWithListClone, itemWithList);
+        console.log(nestedItem.textContent);
       })
-      parent.remove();
     })
 
-    Array.from(document.querySelectorAll('.reference')).forEach((it) => it.remove());
-    Array.from(document.querySelectorAll('ul')).filter((it) => it.children.length === 0).forEach((it) => it.remove());
+    techMoves.removeCollection(nestedLists.map(it => it.parentNode));
 
     console.groupEnd();
   }
