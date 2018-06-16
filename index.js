@@ -61,12 +61,11 @@ function handler(data) {
     // We beatify DOM: lift up nested list items.
     nestedLists.forEach((list) => {
       const itemWithList = list.parentNode;
-      const commonTitle = itemWithList.firstChild.cloneNode(true);
+      const commonTitle = itemWithList.firstChild;
       const itemWithListClone = itemWithList.cloneNode();
-      itemWithListClone.insertBefore(commonTitle, null);
 
       Array.from(list.children).forEach((nestedItem) => {
-        itemWithListClone.innerHTML = ` — ${nestedItem.innerHTML}`;
+        itemWithListClone.innerHTML = `${commonTitle.innerHTML} — ${nestedItem.innerHTML}`;
 
         itemWithList.parentNode.insertBefore(itemWithListClone, itemWithList);
         console.log(nestedItem.textContent);
