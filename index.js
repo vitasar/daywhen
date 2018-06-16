@@ -66,7 +66,8 @@ function handler(data) {
 
       Array.from(list.children).forEach((nestedItem) => {
         const liftedUpItem = itemWithList.cloneNode();
-        liftedUpItem.append(itemTitle.cloneNode(true), ` — ${nestedItem.innerHTML}`);
+        liftedUpItem.append(itemTitle.cloneNode(true), ' — ');
+        liftedUpItem.innerHTML += nestedItem.innerHTML;
 
         itemWithList.before(liftedUpItem);
 
@@ -98,7 +99,7 @@ function handler(data) {
   // wtf
   // it should calc amount of events.
   const calcEventAmount = () => {
-    Array.from(document.querySelectorAll('.mw-parser-output li')).reduce((max, it, index) => {
+    Array.from(pageContent.querySelectorAll('li')).reduce((max, it, index) => {
       let child = it.firstChild;
       if (typeof child.innerHTML !== 'undefined') {
         child = child.firstChild;
@@ -165,7 +166,7 @@ function handler(data) {
     // Vars for deleting common words: country names, jobs — everything doesn't interesting.
     // let stopWords = ['Япония'];
     // let langs = ['en', 'pl', 'nl'];
-    Array.from(document.querySelectorAll('.mw-parser-output li')).map((it) => it.querySelectorAll('a')).forEach((it, index) => {
+    Array.from(pageContent.querySelectorAll('li')).map((it) => it.querySelectorAll('a')).forEach((it, index) => {
       let links = Array.from(it).filter((el) => el.href !== '');
 
       // Add visual delimiter in developer's console.
