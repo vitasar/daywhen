@@ -13,24 +13,26 @@ function handler(data) {
     console.log('Calendar is successfully saved.');
   };
 
-  function removeCollection(set) {
-    if (set.length) {
-      for (let i = 0; i < set.length; i++) {
-        set[i].remove();
+  const techMoves = {
+    removeCollection(set) {
+      if (set.length) {
+        for (let i = 0; i < set.length; i++) {
+          set[i].remove();
+        }
       }
     }
-  }
+  };
 
   // beatify
   // it should remove images, titles, tables — unuseful stuff.
   const removeUnnecessary = () => {
     let unwantedElements = {
-      children: Array.from(pageContent.children).filter((it) => it.tagName !== 'UL'),
+      notListChildren: Array.from(pageContent.children).filter((it) => !it.matches('ul')),
       images: pageContent.querySelectorAll('.thumb'),
       commentaries: pageContent.querySelectorAll('.mw-empty-elt')
     };
-    for (key in unwantedElements) {
-      removeCollection(unwantedElements[key]);
+    for (name in unwantedElements) {
+      techMoves.removeCollection(unwantedElements[name]);
     };
 
     // Start group removed unnecessary events
@@ -39,7 +41,9 @@ function handler(data) {
     const events = pageContent.querySelectorAll('li');
     // We removed everything, that doesn't starts with a year.
     Array.from(events).forEach((it) => {
-      if (isNaN( parseInt(it.textContent) )) {
+      const isNotNestedElement = () => !it.closest('li');
+      const isNotNumberFirst = () => isNaN(parseInt(it.textContent));
+      if (isNotNestedElement && isNotNumberFirst) {
         console.log(it.textContent);
         it.remove();
       }
