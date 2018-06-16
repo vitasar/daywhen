@@ -154,31 +154,26 @@ function handler(data) {
   }
 
   // pass events through filters
-  function removeStopWordsInEvents() {
+  function deactivateLinksByStopWords() {
     Array.from(pageContent.querySelectorAll('li'))
       // [[a, a, a], [a, a], [a, a, a]]
-      .map((it) => it.querySelectorAll('a'))
-      .forEach((it, index) => {
-        if (index < eventAmount) {
-          Array.from(it).forEach((it) => {
-            let linkTitle = it.title;
-            let isLocalLinks = new RegExp('^(' + langs.join('|') + '):').test(linkTitle);
-            let isBadPatterns = new RegExp(excludePatterns.join('|')).test(linkTitle);
-            let isDate = !isNaN(parseInt(linkTitle)) && linkTitle.length < 5;
-            let isStopWords = new RegExp('^(' + stopWords.join('|') + ')$').test(linkTitle);
-            let isEmpty = linkTitle === '';
+      .map((listItem) => listItem.querySelectorAll('a'))
+      .forEach((linkSet) => {
+        Array.from(linkSet).forEach((link) => {
+          const filters = {
+            isLocalLinks: new RegExp('^(' + langs.join('|') + '):').test(link.title),
+            isBadPatterns: new RegExp(excludePatterns.join('|')).test(link.title),
+            isDate: !isNaN(parseInt(link.title)) && link.title.length < 5,
+            isStopWords: new RegExp('^(' + stopWords.join('|') + ')$').test(link.title),
+            isEmpty: link.title === ''
+          };
 
-            const filterFailed = isLocalLinks
-              || isBadPatterns
-              || isDate
-              || isStopWords
-              || isEmpty;
+          const isFilterFailed = Object.keys(filters).some((key) => filters[key]);
 
-            if (filterFailed) {
-              toggleLinkActivity(it);
-            };
-          });
-        };
+          if (isFilterFailed) {
+            toggleLinkActivity(link);
+          };
+        });
       });
   }
 
@@ -396,7 +391,7 @@ function handler(data) {
     // We calculate index delimiter: when events end and persons start.
     addDelimiterBeforePerson();
     // Filter links through our filters
-    removeStopWordsInEvents();
+    deactivateLinksByStopWords();
     // Unite several lists in one.
     uniteLists();
     // Remove person's events from DOM.
