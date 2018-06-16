@@ -122,9 +122,8 @@ function handler(data) {
   }
 
   // smth with links
-  // actually, it doesn't remove link, it just hide it to data-attr,
-  // and on the second click returns everything back.
-  const removeLink = (link) => {
+  // toggle link active state
+  const toggleLinkActivity = (link) => {
     if (link.hasAttribute('href')) {
       link.style = 'color: rgba(244, 67, 54, 0.75); text-decoration: none';
       link.dataset.href = link.getAttribute('href');
@@ -154,6 +153,35 @@ function handler(data) {
     delimiter.parentNode.insertBefore(newLi, delimiter);
   }
 
+  // pass events through filters
+  function removeStopWordsInEvents() {
+    Array.from(pageContent.querySelectorAll('li'))
+      // [[a, a, a], [a, a], [a, a, a]]
+      .map((it) => it.querySelectorAll('a'))
+      .forEach((it, index) => {
+        if (index < eventAmount) {
+          Array.from(it).forEach((it) => {
+            let linkTitle = it.title;
+            let isLocalLinks = new RegExp('^(' + langs.join('|') + '):').test(linkTitle);
+            let isBadPatterns = new RegExp(excludePatterns.join('|')).test(linkTitle);
+            let isDate = !isNaN(parseInt(linkTitle)) && linkTitle.length < 5;
+            let isStopWords = new RegExp('^(' + stopWords.join('|') + ')$').test(linkTitle);
+            let isEmpty = linkTitle === '';
+
+            const filterFailed = isLocalLinks
+              || isBadPatterns
+              || isDate
+              || isStopWords
+              || isEmpty;
+
+            if (filterFailed) {
+              toggleLinkActivity(it);
+            };
+          });
+        };
+      });
+  }
+
   // filter smth
   const removeStopWords = (isNotPrint = true) => {
     // Vars for deleting common words: country names, jobs — everything doesn't interesting.
@@ -171,15 +199,13 @@ function handler(data) {
         let linkTitle = it.title;
         let isLocalLinks = new RegExp('^(' + langs.join('|') + '):').test(linkTitle);
         let isBadPatterns = new RegExp(excludePatterns.join('|')).test(linkTitle);
-        // let isNoPage = ~linkTitle.indexOf('страница отсутствует');
         let isDate = !isNaN(parseInt(linkTitle)) && linkTitle.length < 5;
-        // let isDateWithText = /^\d{1,4}\sгод/.test(linkTitle);
         let isStopWords = new RegExp('^(' + stopWords.join('|') + ')$').test(linkTitle);
         let isEmpty = linkTitle === '';
 
         let successFiltered = !isLocalLinks && !isBadPatterns && !isDate && !isStopWords && !isEmpty;
         if (!successFiltered) {
-          removeLink(it);
+          toggleLinkActivity(it);
         };
 
         return successFiltered;
@@ -209,10 +235,10 @@ function handler(data) {
 
   // smth with links
   const removeLinks = () => {
-    Array.from(document.querySelectorAll('a')).forEach((it) => {
+    Array.from(pageContent.querySelectorAll('a')).forEach((it) => {
       it.addEventListener('click', (e) => {
         e.preventDefault();
-        removeLink(it);
+        toggleLinkActivity(it);
       })
     })
   }
@@ -370,7 +396,7 @@ function handler(data) {
     // We calculate index delimiter: when events end and persons start.
     addDelimiterBeforePerson();
     // Filter links through our filters
-    removeStopWords(false);
+    removeStopWordsInEvents();
     // Unite several lists in one.
     uniteLists();
     // Remove person's events from DOM.
