@@ -43,7 +43,7 @@ function handler(data) {
     Array.from(events).forEach((it) => {
       const isNotNestedElement = () => !it.closest('li li');
       const isNotNumberFirst = () => isNaN(parseInt(it.textContent));
-      if (isNotNestedElement && isNotNumberFirst) {
+      if (isNotNestedElement() && isNotNumberFirst()) {
         console.log(it.textContent);
         it.remove();
       }
