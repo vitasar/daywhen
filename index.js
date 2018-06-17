@@ -93,8 +93,9 @@ function handler(data) {
   function uniteLists() {
     const firstPersonList = pageContent.querySelector(`.${techMoves.CLASS_DELIMITER}`).parentNode;
 
-    let tempEventList = firstPersonList;
+    // unite events lists.
     const eventsFragment = document.createDocumentFragment();
+    let tempEventList = firstPersonList;
     while (tempEventList = tempEventList.previousElementSibling) {
       [...tempEventList.children].reverse().forEach((it) => eventsFragment.prepend(it));
       tempEventList.remove();
@@ -102,9 +103,10 @@ function handler(data) {
     const personList = firstPersonList.cloneNode().append(eventsFragment);
     firstPersonList.before(personList);
 
+    // unite persons lists.
+    const personsFragment = document.createDocumentFragment();
     [...firstPersonList.children].forEach((it) => personsFragment.append(it));
     let tempPersonList = firstPersonList;
-    const personsFragment = document.createDocumentFragment();
     while (tempPersonList = tempPersonList.nextElementSibling) {
       [...tempPersonList.children].forEach((it) => personsFragment.append(it));
       tempPersonList.remove();
