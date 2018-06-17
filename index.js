@@ -113,6 +113,8 @@ function handler(data) {
     const personList = firstPersonList.cloneNode();
     personList.append(personsFragment);
     firstPersonList.replaceWith(personList);
+
+    techMoves.removeCollection(pageContent.querySelectorAll('ul:empty'));
   }
 
   // wtf
