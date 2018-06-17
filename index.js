@@ -1,7 +1,6 @@
 function handler(data) {
-  let { countries, regions, cities, common, excludePatterns, langs } = data;
-  let stopWords = [...countries, ...regions, ...cities, ...common];
-  let eventAmount = 0;
+  const { countries, regions, cities, common, excludePatterns, langs } = data;
+  const stopWords = [...countries, ...regions, ...cities, ...common];
   const pageContent = document.querySelector('.mw-parser-output');
 
   // beatify
@@ -14,12 +13,13 @@ function handler(data) {
   };
 
   const techMoves = {
-    removeCollection(set) {
-      if (set.length) {
-        for (let i = 0; i < set.length; i++) {
-          set[i].remove();
-        }
-      }
+    addRowEraser(row) {
+      const eraser = document.createElement('span');
+      eraser.classList.add('remove-link');
+      eraser.innerHTML = ' — Удалить &#x274C;';
+      eraser.style = 'user-select: none; cursor: pointer; color: red';
+      eraser.addEventListener('click', () => row.remove());
+      row.append(eraser);
     },
     CLASS_DELIMITER: 'event-person',
     createDelimiter() {
@@ -28,13 +28,13 @@ function handler(data) {
       delimiter.classList.add(this.CLASS_DELIMITER);
       return delimiter;
     },
-    addRowEraser(row) {
-      const eraser = document.createElement('span');
-      eraser.classList.add('remove-link');
-      eraser.innerHTML = ' — Удалить &#x274C;';
-      eraser.style = 'user-select: none; cursor: pointer; color: red';
-      eraser.addEventListener('click', () => row.remove());
-      row.append(eraser);
+    eventAmount: 0,
+    removeCollection(set) {
+      if (set.length) {
+        for (let i = 0; i < set.length; i++) {
+          set[i].remove();
+        }
+      }
     }
   };
 
@@ -130,8 +130,8 @@ function handler(data) {
     [...pageContent.querySelectorAll('li')]
       .map((it) => parseInt(it.textContent))
       .reduce((max, it, index) => {
-        if (max > it && eventAmount === 0) {
-          eventAmount = index;
+        if (max > it && techMoves.eventAmount === 0) {
+          techMoves.eventAmount = index;
         };
         if (isNaN(it)) {
           return max;
@@ -140,12 +140,12 @@ function handler(data) {
         return Math.max(max, it);
       }, 0);
 
-    pageContent.querySelectorAll('li')[eventAmount].before(techMoves.createDelimiter());
+    pageContent.querySelectorAll('li')[techMoves.eventAmount].before(techMoves.createDelimiter());
   }
 
   // smth with links
   // toggle link active state
-  const toggleLinkActivity = (link) => {
+  function toggleLinkActivity(link) {
     if (link.hasAttribute('href')) {
       link.style = 'color: rgba(244, 67, 54, 0.75); text-decoration: none';
       link.dataset.href = link.getAttribute('href');
@@ -157,7 +157,7 @@ function handler(data) {
   }
 
   // wtf
-  const addEventItem = (eventContent) => {
+  function addEventItem(eventContent) {
     const lastDelimiter = pageContent.querySelectorAll(`.${techMoves.CLASS_DELIMITER}`)[1];
     lastDelimiter.insertAdjacentHTML('beforeBegin', `<li>${eventContent}</li>`);
   }
@@ -187,42 +187,23 @@ function handler(data) {
   }
 
   // filter smth
-  const removeStopWords = () => {
+  function prepareListsForCopy() {
     [...pageContent.querySelectorAll('li')]
-      .map((listItem) => listItem.querySelectorAll('a'))
-      .forEach((it, index) => {
-        let links = Array.from(it).filter((el) => el.href !== '');
+      .map((listItem) => listItem.querySelectorAll('a[href]'))
+      .forEach((linkSet, index) => {
+        let links = [...linkSet].map((link) => link.title);
 
-        // It occurs, that for person name keeps always at the first link after year. So, we removed others.
-        if (index >= eventAmount) {
-          links = links.filter((it, elIndex) => elIndex < 2);
-        };
-
-        // If year link is absent, we'll need only first link text.
-        // Test functionality.
-        if (index >= eventAmount && links.length > 1) {
-          links.pop();
-        }
-
-        links = links.map((el) => {
-          return el.title;
-        });
-
-
-        if (index < eventAmount || links.length > 0) {
-
-          if (links.length > 0 && index >= eventAmount) {
-            it[0].parentNode.innerHTML = links[0];
-          } else {
-            addEventItem(links.join('|') + '&nbsp;');
-          }
+        if (index < techMoves.eventAmount) {
+          addEventItem(links.join('|'));
+        } else if (links.length) {
+          linkSet[0].parentNode.innerHTML = links[0];
         }
       });
   }
 
   // smth with links
   // handler for toggle activity
-  const addLinkClickHandler = () => {
+  function addLinkClickHandler() {
     [...pageContent.querySelectorAll('a')]
       .forEach((link) => {
         link.addEventListener('click', (e) => {
@@ -232,7 +213,7 @@ function handler(data) {
       })
   }
 
-  let visualControls = {
+  const visualControls = {
     // show first btn
     addDoAllBtn() {
       let btn = document.createElement('button');
@@ -408,7 +389,7 @@ function handler(data) {
   // handler for second btn
   const doIt = () => {
     addAnotherDelimiter();
-    removeStopWords();
+    prepareListsForCopy();
     addRowErasers();
   }
 
