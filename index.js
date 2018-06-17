@@ -34,7 +34,7 @@ function handler(data) {
   // remove images, titles, tables — unuseful stuff.
   function removeUnnecessary() {
     const unwantedElements = {
-      notListChildren: Array.from(pageContent.children).filter((it) => !it.matches('ul')),
+      notListChildren: [...pageContent.children].filter((it) => !it.matches('ul')),
       images: pageContent.querySelectorAll('.thumb'),
       commentaries: pageContent.querySelectorAll('.mw-empty-elt'),
       references: pageContent.querySelectorAll('.reference')
@@ -46,23 +46,23 @@ function handler(data) {
     // Start group removed unnecessary events
     console.groupCollapsed('Below you`ve seen a list of removed items');
 
-    const events = pageContent.querySelectorAll('li');
     // We removed everything, that doesn't starts with a year.
-    Array.from(events).forEach((it) => {
-      const isNotNestedElement = () => !it.closest('li li');
-      const isNotNumberFirst = () => isNaN(parseInt(it.textContent));
-      if (isNotNestedElement() && isNotNumberFirst()) {
-        console.log(it.textContent);
-        it.remove();
-      }
-    });
+    [...pageContent.querySelectorAll('li')]
+      .forEach((it) => {
+        const isNotNestedElement = () => !it.closest('li li');
+        const isNotNumberFirst = () => isNaN(parseInt(it.textContent));
+        if (isNotNestedElement() && isNotNumberFirst()) {
+          console.log(it.textContent);
+          it.remove();
+        }
+      });
     console.groupEnd();
   };
 
   // beatify
   // transform nested lists into neigbouring list elements.
   function beatifyDOM() {
-    const nestedLists = Array.from(pageContent.querySelectorAll('li > ul,li > dl'));
+    const nestedLists = [...pageContent.querySelectorAll('li > ul,li > dl')];
 
     console.groupCollapsed('List of glued events');
 
@@ -71,7 +71,7 @@ function handler(data) {
       const itemWithList = list.parentNode;
       const itemTitle = itemWithList.firstChild;
 
-      Array.from(list.children).forEach((nestedItem) => {
+      [...list.children].forEach((nestedItem) => {
         const liftedUpItem = itemWithList.cloneNode();
         liftedUpItem.append(itemTitle.cloneNode(true), ' — ');
         liftedUpItem.innerHTML += nestedItem.innerHTML;
@@ -119,7 +119,7 @@ function handler(data) {
   // wtf
   // it should calc amount of events.
   function addDelimiterBeforePerson() {
-    Array.from(pageContent.querySelectorAll('li'))
+    [...pageContent.querySelectorAll('li')]
       .map((it) => parseInt(it.textContent))
       .reduce((max, it, index) => {
         if (max > it && eventAmount === 0) {
@@ -169,11 +169,11 @@ function handler(data) {
 
   // pass events through filters
   function deactivateLinksByStopWords() {
-    Array.from(pageContent.querySelectorAll('li'))
+    [...pageContent.querySelectorAll('li')]
       // [[a, a, a], [a, a], [a, a, a]]
       .map((listItem) => listItem.querySelectorAll('a'))
       .forEach((linkSet) => {
-        Array.from(linkSet).forEach((link) => {
+        [...linkSet].forEach((link) => {
           const filters = {
             isLocalLinks: new RegExp('^(' + langs.join('|') + '):').test(link.title),
             isBadPatterns: new RegExp(excludePatterns.join('|')).test(link.title),
@@ -244,7 +244,7 @@ function handler(data) {
 
   // smth with links
   const removeLinks = () => {
-    Array.from(pageContent.querySelectorAll('a')).forEach((it) => {
+    [...pageContent.querySelectorAll('a')].forEach((it) => {
       it.addEventListener('click', (e) => {
         e.preventDefault();
         toggleLinkActivity(it);
@@ -416,7 +416,7 @@ function handler(data) {
   // smth with links
   const addRemoveLinksToPersons = () => {
     let flag = false;
-    Array.from(document.querySelectorAll('.mw-parser-output li')).filter((it, index) => {
+    [...pageContent.querySelectorAll('li')].filter((it, index) => {
       if (it.classList.contains('event-person')) {
         flag = true;
       };
