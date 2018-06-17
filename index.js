@@ -89,6 +89,8 @@ function handler(data) {
   const visualControls = {
     // show first btn
     addParseBtn() {
+      techMoves.addCss();
+
       const btn = document.createElement('button');
       btn.innerHTML = 'All you need';
       btn.classList.add('parse-btn');
@@ -155,7 +157,6 @@ function handler(data) {
   // handler for first btn
   const parsePage = () => {
     // prepare
-    techMoves.addCss();
     saveCalendar();
     console.clear();
 
