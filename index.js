@@ -90,17 +90,17 @@ function handler(data) {
   // beatify
   // unites multiply lists into just two: events & persons.
   // it is necessary because of script selection later.
-  function uniteLists() {
+  const uniteLists = () => {
     const firstPersonList = pageContent.querySelector(`.${techMoves.CLASS_DELIMITER}`).parentNode;
     const lastEventList = firstPersonList.previousElementSibling;
 
-    while (lastEventList.previousElementSibling !== null) {
-      lastEventList.insertAdjacentHTML('beforeBegin', lastEventList.previousElementSibling.innerHTML);
+    while (lastEventList.previousElementSibling) {
+      lastEventList.innerHTML = lastEventList.previousElementSibling.innerHTML + lastEventList.innerHTML;
       lastEventList.previousElementSibling.remove();
     }
 
-    while (firstPersonList.nextElementSibling !== null) {
-      lastEventList.insertAdjacentHTML('afterEnd', firstPersonList.nextElementSibling.innerHTML);
+    while (firstPersonList.nextElementSibling) {
+      firstPersonList.innerHTML = firstPersonList.innerHTML + firstPersonList.nextElementSibling.innerHTML;
       firstPersonList.nextElementSibling.remove();
     }
   }
