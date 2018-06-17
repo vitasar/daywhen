@@ -98,10 +98,9 @@ function handler(data) {
     let tempEventList = firstPersonList;
     while (tempEventList = tempEventList.previousElementSibling) {
       [...tempEventList.children].reverse().forEach((it) => eventsFragment.prepend(it));
-      tempEventList.remove();
     }
-    const personList = firstPersonList.cloneNode().append(eventsFragment);
-    firstPersonList.before(personList);
+    const eventsList = firstPersonList.cloneNode().append(eventsFragment);
+    firstPersonList.before(eventsList);
 
     // unite persons lists.
     const personsFragment = document.createDocumentFragment();
@@ -109,10 +108,9 @@ function handler(data) {
     let tempPersonList = firstPersonList;
     while (tempPersonList = tempPersonList.nextElementSibling) {
       [...tempPersonList.children].forEach((it) => personsFragment.append(it));
-      tempPersonList.remove();
     }
-    const eventsList = firstPersonList.cloneNode().append(personsFragment);
-    firstPersonList.replaceWith(eventsList);
+    const personList = firstPersonList.cloneNode().append(personsFragment);
+    firstPersonList.replaceWith(personList);
   }
 
   // wtf
