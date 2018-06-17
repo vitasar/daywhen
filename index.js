@@ -339,19 +339,14 @@ function handler(data) {
 
   // copy element to exchange buffer
   // copy events and persons uses it.
-  function copytoBuffer(it) {
-    let range = document.createRange();
-    range.selectNode(it);
+  function copytoBuffer(list) {
+    window.getSelection().removeAllRanges();
+
+    const range = document.createRange();
+    range.selectNode(list);
     window.getSelection().addRange(range);
 
-    try {
-      let success = document.execCommand('copy');
-      console.log(success ? 'copy successed' : 'copy failure');
-    } catch (err) {
-      console.log(err);
-    }
-
-    window.getSelection().removeAllRanges();
+    document.execCommand('copy');
   }
 
   // handler for first btn
