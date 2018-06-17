@@ -148,9 +148,9 @@ function handler(data) {
       document.body.prepend(link);
     },
     addEditControls() {
-      techMoves.addEditBtn();
-      techMoves.addStoriesBtn();
-      techMoves.addGenericBtn();
+      visualControls.addEditBtn();
+      visualControls.addStoriesBtn();
+      visualControls.addGenericBtn();
     }
   }
 
