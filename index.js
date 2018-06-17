@@ -27,6 +27,14 @@ function handler(data) {
       delimiter.style = 'border-top: 3px solid red';
       delimiter.classList.add(this.CLASS_DELIMITER);
       return delimiter;
+    },
+    addRowEraser(row) {
+      const eraser = document.createElement('span');
+      eraser.classList.add('remove-link');
+      eraser.innerHTML = ' — Удалить &#x274C;';
+      eraser.style = 'user-select: none; cursor: pointer; color: red';
+      eraser.addEventListener('click', () => row.remove());
+      row.append(eraser);
     }
   };
 
@@ -148,23 +156,10 @@ function handler(data) {
     }
   }
 
-  // smth with links
-  // add red cross to right side of row.
-  const addRemoveLink = (li) => {
-    var removeLink = document.createElement('span');
-    removeLink.classList.add('remove-link');
-    removeLink.innerHTML = ' — Удалить &#x274C;';
-    removeLink.style = 'user-select :none; cursor: pointer; color: red';
-    removeLink.addEventListener('click', () => li.remove());
-    li.appendChild(removeLink);
-  }
-
   // wtf
-  const addEventItem = (it) => {
-    let delimiter = document.querySelectorAll('.event-person')[1];
-    let newLi = document.createElement('li');
-    newLi.innerHTML = it;
-    delimiter.parentNode.insertBefore(newLi, delimiter);
+  const addEventItem = (eventContent) => {
+    const lastDelimiter = pageContent.querySelectorAll(`.${techMoves.CLASS_DELIMITER}`)[1];
+    lastDelimiter.insertAdjacentHTML('beforeBegin', `<li>${eventContent}</li>`);
   }
 
   // pass events through filters
@@ -192,64 +187,49 @@ function handler(data) {
   }
 
   // filter smth
-  const removeStopWords = (isNotPrint = true) => {
-    // Vars for deleting common words: country names, jobs — everything doesn't interesting.
-    // let stopWords = ['Япония'];
-    // let langs = ['en', 'pl', 'nl'];
-    Array.from(pageContent.querySelectorAll('li')).map((it) => it.querySelectorAll('a')).forEach((it, index) => {
-      let links = Array.from(it).filter((el) => el.href !== '');
+  const removeStopWords = () => {
+    [...pageContent.querySelectorAll('li')]
+      .map((listItem) => listItem.querySelectorAll('a'))
+      .forEach((it, index) => {
+        let links = Array.from(it).filter((el) => el.href !== '');
 
-      // It occurs, that for person name keeps always at the first link after year. So, we removed others.
-      if (index >= eventAmount) {
-        links = links.filter((it, elIndex) => elIndex < 2);
-      };
-
-      let filteredLinks = isNotPrint ? links : links.filter((it) => {
-        let linkTitle = it.title;
-        let isLocalLinks = new RegExp('^(' + langs.join('|') + '):').test(linkTitle);
-        let isBadPatterns = new RegExp(excludePatterns.join('|')).test(linkTitle);
-        let isDate = !isNaN(parseInt(linkTitle)) && linkTitle.length < 5;
-        let isStopWords = new RegExp('^(' + stopWords.join('|') + ')$').test(linkTitle);
-        let isEmpty = linkTitle === '';
-
-        let successFiltered = !isLocalLinks && !isBadPatterns && !isDate && !isStopWords && !isEmpty;
-        if (!successFiltered) {
-          toggleLinkActivity(it);
+        // It occurs, that for person name keeps always at the first link after year. So, we removed others.
+        if (index >= eventAmount) {
+          links = links.filter((it, elIndex) => elIndex < 2);
         };
 
-        return successFiltered;
-      });
-
-      // If year link is absent, we'll need only first link text.
-      // Test functionality.
-      if (index >= eventAmount && filteredLinks.length > 1) {
-        filteredLinks.pop();
-      }
-
-      filteredLinks = filteredLinks.map((el) => {
-        return el.title;
-      });
-
-
-      if ((index < eventAmount || filteredLinks.length > 0) && isNotPrint) {
-
-        if (filteredLinks.length > 0 && index >= eventAmount) {
-          it[0].parentNode.innerHTML = filteredLinks[0];
-        } else {
-          addEventItem(filteredLinks.join('|') + '&nbsp;');
+        // If year link is absent, we'll need only first link text.
+        // Test functionality.
+        if (index >= eventAmount && links.length > 1) {
+          links.pop();
         }
-      }
-    });
+
+        links = links.map((el) => {
+          return el.title;
+        });
+
+
+        if (index < eventAmount || links.length > 0) {
+
+          if (links.length > 0 && index >= eventAmount) {
+            it[0].parentNode.innerHTML = links[0];
+          } else {
+            addEventItem(links.join('|') + '&nbsp;');
+          }
+        }
+      });
   }
 
   // smth with links
-  const removeLinks = () => {
-    [...pageContent.querySelectorAll('a')].forEach((it) => {
-      it.addEventListener('click', (e) => {
-        e.preventDefault();
-        toggleLinkActivity(it);
+  // handler for toggle activity
+  const addLinkClickHandler = () => {
+    [...pageContent.querySelectorAll('a')]
+      .forEach((link) => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          toggleLinkActivity(link);
+        })
       })
-    })
   }
 
   let visualControls = {
@@ -334,7 +314,7 @@ function handler(data) {
 
       link.addEventListener('click', handler);
       function handler() {
-        let eventsDescriptionList = document.querySelector('.event-person').parentNode.previousElementSibling;
+        let eventsDescriptionList = document.querySelector(`.${techMoves.CLASS_DELIMITER}`).parentNode.previousElementSibling;
         copytoBuffer(eventsDescriptionList);
       };
 
@@ -363,7 +343,7 @@ function handler(data) {
 
       link.addEventListener('click', handler);
       function handler() {
-        let eventsLinkList = document.querySelector('.event-person').parentNode;
+        let eventsLinkList = document.querySelector(`.${techMoves.CLASS_DELIMITER}`).parentNode;
         copytoBuffer(eventsLinkList);
       };
 
@@ -409,33 +389,27 @@ function handler(data) {
     // Unite several lists in one.
     uniteLists();
     // Remove person's events from DOM.
-    removeLinks();
+    addLinkClickHandler();
     visualControls.addSecondSet();
   }
 
   // smth with links
-  const addRemoveLinksToPersons = () => {
-    let flag = false;
-    [...pageContent.querySelectorAll('li')].filter((it, index) => {
-      if (it.classList.contains('event-person')) {
-        flag = true;
-      };
-      return flag;
-    }).forEach((it) => addRemoveLink(it));
+  function addRowErasers() {
+    const persons = pageContent.querySelector(`.${techMoves.CLASS_DELIMITER}`).parentNode.children;
+    [...persons].forEach((it) => techMoves.addRowEraser(it));
   }
 
   // add some delimiter
-  const addAnotherDelimiter = () => {
-    let delimiter = document.querySelector('.event-person');
-    let copyDelimiter = delimiter.cloneNode();
-    delimiter.parentNode.insertBefore(copyDelimiter, delimiter);
+  function addAnotherDelimiter() {
+    const delimiter = pageContent.querySelector(`.${techMoves.CLASS_DELIMITER}`);
+    delimiter.before(techMoves.createDelimiter());
   }
 
   // handler for second btn
   const doIt = () => {
     addAnotherDelimiter();
     removeStopWords();
-    addRemoveLinksToPersons();
+    addRowErasers();
   }
 
   // show in any case just now.
