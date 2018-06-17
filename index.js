@@ -99,7 +99,7 @@ function handler(data) {
     while (tempEventList = tempEventList.previousElementSibling) {
       [...tempEventList.children].reverse().forEach((it) => eventsFragment.prepend(it));
     }
-    const eventsList = firstPersonList.cloneNode().append(eventsFragment);
+    const eventsList = firstPersonList.cloneNode().appendChild(eventsFragment);
     firstPersonList.before(eventsList);
 
     // unite persons lists.
@@ -109,7 +109,7 @@ function handler(data) {
     while (tempPersonList = tempPersonList.nextElementSibling) {
       [...tempPersonList.children].forEach((it) => personsFragment.append(it));
     }
-    const personList = firstPersonList.cloneNode().append(personsFragment);
+    const personList = firstPersonList.cloneNode().appendChild(personsFragment);
     firstPersonList.replaceWith(personList);
   }
 
