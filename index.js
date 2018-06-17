@@ -90,19 +90,27 @@ function handler(data) {
   // beatify
   // unites multiply lists into just two: events & persons.
   // it is necessary because of script selection later.
-  const uniteLists = () => {
+  function uniteLists() {
     const firstPersonList = pageContent.querySelector(`.${techMoves.CLASS_DELIMITER}`).parentNode;
-    const lastEventList = firstPersonList.previousElementSibling;
 
-    while (lastEventList.previousElementSibling) {
-      lastEventList.innerHTML = lastEventList.previousElementSibling.innerHTML + lastEventList.innerHTML;
-      lastEventList.previousElementSibling.remove();
+    let tempEventList = firstPersonList;
+    const eventsFragment = document.createDocumentFragment();
+    while (tempEventList = tempEventList.previousElementSibling) {
+      [...tempEventList.children].reverse().forEach((it) => eventsFragment.prepend(it));
+      tempEventList.remove();
     }
+    const personList = firstPersonList.cloneNode().append(eventsFragment);
+    firstPersonList.before(personList);
 
-    while (firstPersonList.nextElementSibling) {
-      firstPersonList.innerHTML = firstPersonList.innerHTML + firstPersonList.nextElementSibling.innerHTML;
-      firstPersonList.nextElementSibling.remove();
+    [...firstPersonList.children].forEach((it) => personsFragment.append(it));
+    let tempPersonList = firstPersonList;
+    const personsFragment = document.createDocumentFragment();
+    while (tempPersonList = tempPersonList.nextElementSibling) {
+      [...tempPersonList.children].forEach((it) => personsFragment.append(it));
+      tempPersonList.remove();
     }
+    const eventsList = firstPersonList.cloneNode().append(personsFragment);
+    firstPersonList.replaceWith(eventsList);
   }
 
   // wtf
