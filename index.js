@@ -101,7 +101,6 @@ function handler(data) {
     }
     const eventsList = firstPersonList.cloneNode();
     eventsList.append(eventsFragment);
-    firstPersonList.before(eventsList);
 
     // unite persons lists.
     const personsFragment = document.createDocumentFragment();
@@ -112,9 +111,9 @@ function handler(data) {
     }
     const personList = firstPersonList.cloneNode();
     personList.append(personsFragment);
-    firstPersonList.replaceWith(personList);
 
-    techMoves.removeCollection(pageContent.querySelectorAll('ul:empty'));
+    pageContent.innerHTML = '';
+    pageContent.append(eventsList, personList);
   }
 
   // wtf
