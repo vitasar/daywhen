@@ -330,7 +330,7 @@ function handler(data) {
   function addEventToGeneric(eventContent) {
     const personsDelimiter = pageContent.querySelectorAll(`.${techMoves.CLASS_DELIMITER}`)[1];
     // space is nesessary, because of empty selection purpose.
-    personsDelimiter.insertAdjacentHTML('beforeBegin', `<li>${eventContent} </li>`);
+    personsDelimiter.insertAdjacentHTML('beforeBegin', `<li>${eventContent}&nbsp;</li>`);
   }
 
   if (true) {
