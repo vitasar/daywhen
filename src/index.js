@@ -243,13 +243,15 @@ function handler(data) {
 
   function addGenericDelimiter() {
     [...pageContent.querySelectorAll('li')]
-      .map((it) => parseInt(it.textContent))
-      .reduce((maxYear, rowYear, sequenceNumber) => {
+      .map((it) => it.textContent)
+      .reduce((maxYear, rowText, sequenceNumber) => {
+        const rowYear = parseInt(rowText);
+        if (isNaN(rowYear) || ~rowText.search('н. э.')) {
+          return maxYear;
+        };
+
         if (maxYear > rowYear && techMoves.storiesAmount === 0) {
           techMoves.storiesAmount = sequenceNumber;
-        };
-        if (isNaN(rowYear)) {
-          return maxYear;
         };
 
         return Math.max(maxYear, rowYear);
