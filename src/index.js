@@ -69,12 +69,16 @@ function handler(data) {
     storiesAmount: 0,
     deactivateLink(link) {
       link.classList.add('toggle-link');
-      link.dataset.href = link.getAttribute('href');
+      if (link.getAttribute('href')) {
+        link.dataset.href = link.getAttribute('href');
+      };
       link.removeAttribute('href');
     },
     activateLink(link) {
       link.classList.remove('toggle-link');
-      link.setAttribute('href', link.dataset.href);
+      if (link.dataset.href) {
+        link.setAttribute('href', link.dataset.href);
+      };
     },
     toggleLinkActivity(link) {
       const allLinksInRow = link.closest('li').querySelectorAll('a');
