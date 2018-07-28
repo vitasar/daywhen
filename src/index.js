@@ -38,6 +38,11 @@ function handler(data) {
             e.preventDefault();
             techMoves.toggleLinkActivity(link);
           })
+          link.addEventListener('keydown', (e) => {
+            if (e.shiftKey) {
+              techMoves.deactivateLink(link);
+            }
+          })
         })
     },
     addRowEraser(row) {
@@ -82,9 +87,9 @@ function handler(data) {
     },
     toggleLinkActivity(link) {
       const allLinksInRow = link.closest('li').querySelectorAll('a');
-      [...allLinksInRow].forEach(this.deactivateLink);
+      [...allLinksInRow].forEach(techMoves.deactivateLink);
 
-      this.activateLink(link);
+      techMoves.activateLink(link);
     },
     removeCollection(set) {
       if (set.length) {
