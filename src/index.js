@@ -309,7 +309,7 @@ function handler(data) {
           const isFilterFailed = Object.keys(filters).some((key) => filters[key]);
 
           if (isFilterFailed) {
-            techMoves.toggleLinkActivity(link);
+            techMoves.deactivateLink(link);
           };
         });
       });
