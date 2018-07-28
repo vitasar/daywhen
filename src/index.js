@@ -251,7 +251,7 @@ function handler(data) {
       .map((it) => it.textContent)
       .reduce((maxYear, rowText, sequenceNumber) => {
         const rowYear = parseInt(rowText);
-        if (isNaN(rowYear) || ~rowText.search('н. э.')) {
+        if (isNaN(rowYear) || new RegExp('н.\\sэ.').test(rowText)) {
           return maxYear;
         };
 
