@@ -67,15 +67,20 @@ function handler(data) {
       return delimiter;
     },
     storiesAmount: 0,
+    deactivateLink(link) {
+      link.classList.add('toggle-link');
+      link.dataset.href = link.getAttribute('href');
+      link.removeAttribute('href');
+    },
+    activateLink(link) {
+      link.classList.remove('toggle-link');
+      link.setAttribute('href', link.dataset.href);
+    },
     toggleLinkActivity(link) {
-      if (link.hasAttribute('href')) {
-        link.classList.add('toggle-link');
-        link.dataset.href = link.getAttribute('href');
-        link.removeAttribute('href');
-      } else {
-        link.classList.remove('toggle-link');
-        link.setAttribute('href', link.dataset.href);
-      }
+      const allLinksInRow = link.closest('li').querySelectorAll('a');
+      [...allLinksInRow].forEach(this.deactivateLink);
+
+      this.activateLink(link);
     },
     removeCollection(set) {
       if (set.length) {
