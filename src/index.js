@@ -36,12 +36,7 @@ function handler(data) {
         .forEach((link) => {
           link.addEventListener('click', (e) => {
             e.preventDefault();
-            techMoves.toggleLinkActivity(link);
-          })
-          link.addEventListener('keydown', (e) => {
-            if (e.shiftKey) {
-              techMoves.deactivateLink(link);
-            }
+            techMoves.toggleLinkActivity(link, e.ctrlKey);
           })
         })
     },
@@ -85,11 +80,13 @@ function handler(data) {
         link.setAttribute('href', link.dataset.href);
       };
     },
-    toggleLinkActivity(link) {
+    toggleLinkActivity(link, isCtrlPushed) {
       const allLinksInRow = link.closest('li').querySelectorAll('a');
       [...allLinksInRow].forEach(techMoves.deactivateLink);
 
-      techMoves.activateLink(link);
+      if (!isCtrlPushed) {
+        techMoves.activateLink(link);
+      }
     },
     removeCollection(set) {
       if (set.length) {
