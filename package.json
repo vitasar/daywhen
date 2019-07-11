@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/vitasar/daywhen#readme",
   "dependencies": {
-    "eslint": "^4.19.1"
+    "eslint": "^6.0.1"
   }
 }
